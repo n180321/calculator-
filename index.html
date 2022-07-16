@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Calculator</title>
+        <link rel="stylesheet" href="calci.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+    </head>
+    <body>
+        <h1 style="color:darkviolet;">Calculator</h1>
+        <div class="main">
+            <table>
+                <tr>
+                    <textarea type="text" id="display" disabled></textarea>
+                </tr>
+                <tr>
+                    <td><button id="v1">1</button></td>
+                    <td><button id="v2">2</button></td>
+                    <td><button id="v3">3</button></td>
+                    <td><button id="v+"><i class="fa-solid fa-plus"></i></button></td>
+                </tr>
+                <tr>
+                    <td><button id="v4">4</button></td>
+                    <td><button id="v5">5</button></td>
+                    <td><button id="v6">6</button></td>
+                    <td><button id="v-"><i class="fa-solid fa-minus"></i></button></td>
+                </tr>
+                <tr>
+                    <td><button id="v7">7</button></td>
+                    <td><button id="v8">8</button></td>
+                    <td><button id="v9">9</button></td>
+                    <td><button id="v*"><i class="fa-solid fa-xmark"></i></button></td>
+                </tr>
+                <tr>
+                    <td><button id="v.">.</button></td>
+                    <td><button id="v0">0</button></td>
+                    <td><button id="v="><i class="fa-solid fa-equals"></i></button></td>
+                    <td><button id="v/">/</button></td>
+                </tr>
+                <tr>
+                    <td><button id="vclear">Clear</button></td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            var display = document.getElementById("display");
+            var old_exp = "";
+            var expression = "";
+            ///
+            var regex = /[0-9+-/%]+[+-/%][0-9+-/*%]+/g;
+            ///
+            function displayer(e){
+                display.textContent=e;
+            }
+            function CALC(exp){
+                if(regex.test(exp)){
+                    //
+                    console.log(regex.test(exp),exp);
+                    //
+                    var result = eval(exp);
+                    if(result == "Infinity" || result == "NaN"){
+                        console.log(result);
+                        displayer(exp+" => Invalid");
+                        $("textarea").css("color","red");
+                    }else{
+                        $("textarea").css("color","green");
+                        displayer(exp+" => "+result);
+                    }
+                }else{
+                    $("textarea").css("color","red");
+                    displayer(exp+" => Invalid");
+                }
+                //
+                // console.log(exp);
+            }
+            $(document).ready(function(){
+                $("button").click(function(){
+                        if(this.id!="vclear" && this.id!="vdel" && this.id!="v=" && this.id!="pre"){
+                            expression = expression + this.id[1];
+                            displayer(expression);
+                        }else if(this.id=="v="){
+                            if(expression!="")CALC(expression)
+                        }else if(this.id=="vdel"){
+                            expression = expression.slice(0, expression.length-1);
+                            displayer(expression);
+                        }else if(this.id=="pre"){
+                            if(confirm("Do you want to load Previous Expression??\nNote: Present Expression will be erased!!, Do you want to continue??")){
+                                expression = old_exp;
+                                console.log(expression);
+                                displayer(expression);
+                            }
+                        }else{
+                            old_exp = expression;
+                            expression ="";
+                            $("textarea").css("color","black");
+                            displayer("Start Again!!");
+                        }
+                });
+            });
+        </script>
+    </body>
+</html>ss
